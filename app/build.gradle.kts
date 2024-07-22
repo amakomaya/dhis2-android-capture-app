@@ -55,6 +55,9 @@ android {
             isReturnDefaultValues = true
         }
         animationsDisabled = true
+        emulatorControl {
+            enable = true
+        }
     }
 
     sourceSets {
@@ -259,6 +262,7 @@ dependencies {
     implementation(libs.analytics.customactivityoncrash)
     implementation(platform(libs.dispatcher.dispatchBOM))
     implementation(libs.dispatcher.dispatchCore)
+    implementation(libs.androidx.espresso.device)
 
     coreLibraryDesugaring(libs.desugar)
 

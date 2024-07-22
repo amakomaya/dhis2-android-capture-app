@@ -84,6 +84,7 @@ allprojects {
                 password = mapboxDownloadsToken as String
             }
         }
+
     }
 
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
@@ -117,6 +118,8 @@ allprojects {
 tasks.register("clean", Delete::class) {
     delete(rootProject.layout.buildDirectory)
 }
+
+
 
 
 
