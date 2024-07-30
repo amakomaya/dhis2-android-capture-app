@@ -2,6 +2,7 @@ package org.dhis2.usescases.deleteAccount
 
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import org.dhis2.bindings.buildInfo
@@ -21,6 +22,9 @@ class DeleteAccountTest() : BaseTest(), Parcelable {
     @get:Rule
     val rule = ActivityTestRule(MainActivity::class.java, false, false)
 
+    @get:Rule
+    val composeTestRule = createComposeRule()
+
     constructor(parcel: Parcel) : this() {
     }
 
@@ -33,7 +37,7 @@ class DeleteAccountTest() : BaseTest(), Parcelable {
             clickDeleteAccount()
             clickAccept()
         }
-        loginRobot {
+        loginRobot (composeTestRule){
             isServerURLFieldDisplayed()
         }
 
