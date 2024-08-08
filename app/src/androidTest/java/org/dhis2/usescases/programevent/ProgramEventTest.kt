@@ -53,6 +53,31 @@ class ProgramEventTest : BaseTest() {
     }
 
     @Test
+    fun shouldCreateNewEventAndSaveWithoutComplete() {
+        val eventOrgUnit = "Ngelehun CHC"
+        prepareProgramAndLaunchActivity(antenatalCare)
+
+        programEventsRobot(composeTestRule) {
+            clickOnAddEvent()
+        }
+        orgUnitSelectorRobot(composeTestRule) {
+            selectTreeOrgUnit(eventOrgUnit)
+        }
+        eventRobot(composeTestRule) {
+            typeOnDateParameter(
+                dateValue = "01012001",
+            )
+            clickOnFormFabButton()
+            //clearDateField()
+            pressBackspaceOnKeyboard(composeTestRule)
+            clickOnCompleteButton()
+        }
+        programEventsRobot(composeTestRule) {
+            checkEventWasCreatedAndClosed()
+        }
+    }
+
+    @Test
     fun shouldOpenExistingEvent() {
         val eventDate = "15/3/2020"
         val eventOrgUnit = "Ngelehun CHC"
