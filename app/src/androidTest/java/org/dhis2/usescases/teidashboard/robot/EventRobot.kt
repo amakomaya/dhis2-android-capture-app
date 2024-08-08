@@ -21,6 +21,11 @@ import org.dhis2.common.matchers.hasCompletedPercentage
 import org.dhis2.ui.dialogs.bottomsheet.MAIN_BUTTON_TAG
 import org.dhis2.ui.dialogs.bottomsheet.SECONDARY_BUTTON_TAG
 
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextInput
+import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.waitUntilAtLeastOneExists
+
 fun eventRobot(
     composeTestRule: ComposeTestRule,
     eventRobot: EventRobot.() -> Unit
@@ -80,6 +85,32 @@ class EventRobot(val composeTestRule: ComposeTestRule) : BaseRobot() {
     fun selectSpecificDate(date: String) {
         composeTestRule.onNodeWithTag("DATE_PICKER").assertIsDisplayed()
         composeTestRule.onNode(hasText(date, true)).performClick()
+    }
+
+    //clear date field
+    fun clearDateField() {
+        composeTestRule.apply {
+            /*onNodeWithTag("INPUT_DATE_TIME_TEXT_FIELD").performTextInput("")
+            onNodeWithTag("DATE_PICKER").performTextInput("")
+
+            onNodeWithTag("INPUT_DATE_TIME_TEXT_FIELD").performClick()
+            onNodeWithTag("INPUT_DATE_TIME_TEXT_FIELD").performTextInput("")*/
+
+            onNodeWithText("Visit date").performClick()
+            onNodeWithText("Visit date").performTextInput("")
+        }
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    fun pressBackspaceOnKeyboard(composeTestRule: ComposeTestRule) {
+        composeTestRule.waitUntilAtLeastOneExists(hasTestTag("INPUT_DATE_TIME_TEXT_FIELD"), 2000)
+        composeTestRule.apply {
+//            onNodeWithTag("INPUT_DATE_TIME_TEXT_FIELD").performClick()
+//            onNodeWithTag("INPUT_DATE_TIME_TEXT_FIELD").performTextInput("\b")
+            onNodeWithText("Visit").performClick()
+            onNodeWithText("Visit").performTextInput("\b")
+
+        }
     }
 
     @OptIn(ExperimentalTestApi::class)
