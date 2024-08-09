@@ -43,6 +43,7 @@ class ProgramEventTest : BaseTest() {
         eventRobot(composeTestRule) {
             typeOnDateParameter(
                 dateValue = "01012001",
+                title = "Visit date *"
             )
             clickOnFormFabButton()
             clickOnCompleteButton()
@@ -65,7 +66,8 @@ class ProgramEventTest : BaseTest() {
         }
         eventRobot(composeTestRule) {
             typeOnDateParameter(
-                dateValue = "01012001",
+                dateValue = "",
+                title = "Visit date *"
             )
             clickOnFormFabButton()
             //clearDateField()

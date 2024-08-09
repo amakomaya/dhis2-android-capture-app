@@ -10,6 +10,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
+import androidx.compose.ui.test.performTextReplacement
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -20,11 +21,6 @@ import org.dhis2.common.BaseRobot
 import org.dhis2.common.matchers.hasCompletedPercentage
 import org.dhis2.ui.dialogs.bottomsheet.MAIN_BUTTON_TAG
 import org.dhis2.ui.dialogs.bottomsheet.SECONDARY_BUTTON_TAG
-
-import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performTextInput
-import androidx.compose.ui.test.hasTestTag
-import androidx.compose.ui.test.waitUntilAtLeastOneExists
 
 fun eventRobot(
     composeTestRule: ComposeTestRule,
@@ -113,12 +109,16 @@ class EventRobot(val composeTestRule: ComposeTestRule) : BaseRobot() {
         }
     }
 
-    @OptIn(ExperimentalTestApi::class)
-    fun typeOnDateParameter(dateValue: String) {
-        composeTestRule.waitUntilAtLeastOneExists(hasTestTag("INPUT_DATE_TIME_TEXT_FIELD"),2000)
+    fun typeOnDateParameter(dateValue: String, title: String) {
         composeTestRule.apply {
-            onNodeWithTag("INPUT_DATE_TIME_TEXT_FIELD").performClick()
-            onNodeWithTag("INPUT_DATE_TIME_TEXT_FIELD").performTextInput(dateValue)
+            onNode(
+                hasTestTag(
+                    "INPUT_DATE_TIME_TEXT_FIELD"
+                ) and hasAnySibling(
+                    hasText(title)
+                ),
+                useUnmergedTree = true,
+            ).performTextReplacement(dateValue)
         }
     }
 

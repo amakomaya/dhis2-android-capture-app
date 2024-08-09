@@ -5,9 +5,6 @@ import android.os.Parcelable
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
-import org.dhis2.bindings.buildInfo
-import org.dhis2.BuildConfig
-import org.dhis2.R
 import org.dhis2.usescases.BaseTest
 import org.dhis2.usescases.login.loginRobot
 import org.dhis2.usescases.main.MainActivity
@@ -35,7 +32,7 @@ class DeleteAccountTest() : BaseTest(), Parcelable {
         homeRobot {
             clickOnNavigationDrawerMenu()
             clickDeleteAccount()
-            clickAccept()
+//            clickAccept()
         }
         loginRobot (composeTestRule){
             isServerURLFieldDisplayed()
