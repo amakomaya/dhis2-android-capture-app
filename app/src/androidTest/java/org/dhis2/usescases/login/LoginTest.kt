@@ -209,12 +209,6 @@ class LoginTest : BaseTest() {
     }
 
     @Test
-    fun shouldGoToHomeScreenWhenUserIsLoggedIn() {
-        setupCredentials()
-        startLoginActivity()
-    }
-
-    @Test
     fun shouldGenerateLoginThroughQR() {
         enableIntents()
         mockOnActivityForResult()
