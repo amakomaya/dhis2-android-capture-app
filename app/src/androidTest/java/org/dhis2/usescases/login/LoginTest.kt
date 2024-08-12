@@ -27,6 +27,7 @@ import org.hisp.dhis.android.core.D2Manager
 import org.hisp.dhis.android.core.mockwebserver.ResponseController.Companion.API_ME_PATH
 import org.hisp.dhis.android.core.mockwebserver.ResponseController.Companion.API_SYSTEM_INFO_PATH
 import org.hisp.dhis.android.core.mockwebserver.ResponseController.Companion.GET
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 
@@ -97,14 +98,21 @@ class LoginTest : BaseTest() {
             typePassword(PASSWORD)
             clickLoginButton()
 
+            //shouldDisplayShareDataDialogAndOpenPrivacyPolicy()
             //Manual test case 5184
+            checkShareDataDialogIsDisplayed()
+            clickOnPrivacyPolicy()
+            checkPrivacyViewIsOpened()
+            pressBack()
             acceptTrackerDialog()
             clickYesOnAcceptTrackerDialog()
         }
         cleanDatabase()
     }
 
+
     @Test
+//    @Ignore("included in login workflow test")
     fun shouldLoginSuccessfullyWhenCredentialsAreRight() {
         mockWebServerRobot.addResponse(GET, API_ME_PATH, API_ME_RESPONSE_OK)
         mockWebServerRobot.addResponse(GET, API_SYSTEM_INFO_PATH, API_SYSTEM_INFO_RESPONSE_OK)
@@ -129,6 +137,7 @@ class LoginTest : BaseTest() {
     }
 
     @Test
+    //    @Ignore("included in login workflow test")
     fun shouldGetAuthErrorWhenCredentialsAreWrong() {
         mockWebServerRobot.addResponse(GET, API_ME_PATH, API_ME_UNAUTHORIZE, HTTP_UNAUTHORIZE)
         startLoginActivity()
@@ -143,6 +152,7 @@ class LoginTest : BaseTest() {
     }
 
     @Test
+    //    @Ignore("included in login workflow test")
     fun shouldHideLoginButtonIfPasswordIsMissing() {
         startLoginActivity()
 
@@ -158,6 +168,7 @@ class LoginTest : BaseTest() {
 
     @Test
     fun shouldLaunchWebViewWhenClickAccountRecoveryAndServerIsFilled() {
+        //    @Ignore("included in login workflow test")
         enableIntents()
         startLoginActivity()
         loginRobot(composeTestRule) {
@@ -170,6 +181,7 @@ class LoginTest : BaseTest() {
 
     @Test
     fun shouldClearFieldsAndHideLoginButtonWhenClickCredentialXButton() {
+        //    @Ignore("included in login workflow test")
         startLoginActivity()
         loginRobot(composeTestRule) {
             clearServerField()
