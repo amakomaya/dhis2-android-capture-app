@@ -8,6 +8,8 @@ import androidx.annotation.Nullable;
 import org.dhis2.commons.filters.FilterItem;
 import org.dhis2.commons.filters.FilterManager;
 import org.dhis2.commons.filters.Filters;
+import org.dhis2.commons.intents.CustomIntentAction;
+import org.dhis2.form.model.FieldUiModel;
 import org.dhis2.maps.model.StageStyle;
 import org.dhis2.usescases.general.AbstractActivityContracts;
 import org.hisp.dhis.android.core.arch.call.D2Progress;
@@ -130,5 +132,7 @@ public class SearchTEContractsModule {
         void trackSearchAnalytics();
 
         void trackSearchMapVisualization();
+
+        CustomIntentAction hasCustomIntent(FieldUiModel fieldUiModel);
     }
 }
