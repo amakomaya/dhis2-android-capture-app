@@ -132,7 +132,5 @@ public class SearchTEContractsModule {
         void trackSearchAnalytics();
 
         void trackSearchMapVisualization();
-
-        CustomIntentAction hasCustomIntent(FieldUiModel fieldUiModel);
     }
 }

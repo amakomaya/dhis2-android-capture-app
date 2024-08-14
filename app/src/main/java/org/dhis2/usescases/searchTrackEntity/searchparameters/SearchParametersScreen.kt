@@ -85,7 +85,6 @@ fun SearchParametersScreen(
     onSearch: () -> Unit,
     onClear: () -> Unit,
     onClose: () -> Unit,
-    hasCustomIntent: (FieldUiModel) -> CustomIntentAction?,
 ) {
     val scaffoldState = rememberScaffoldState()
     val snackBarHostState = scaffoldState.snackbarHostState
@@ -238,71 +237,22 @@ fun SearchParametersScreen(
                 } else {
                     uiState.items.forEachIndexed { index, fieldUiModel ->
                         fieldUiModel.setCallback(callback)
-                        if (index == 0) {
-                            var currentValue by remember {
-                                mutableStateOf(fieldUiModel.value)
-                            }
-                            val intent = Intent.createChooser(
-                                hasCustomIntent(fieldUiModel)?.toIntent(),
-                                "Custom intent!",
-                            )
-                            val launcher =
-                                rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) { result ->
-                                    if (result.resultCode == RESULT_OK) {
-                                        val content = result.data?.data.toString()
-                                        currentValue = content
-                                        callback.intent(
-                                            FormIntent.OnSave(
-                                                fieldUiModel.uid,
-                                                content,
-                                                fieldUiModel.valueType,
-                                            ),
-                                        )
+                        ParameterSelectorItem(
+                            modifier = Modifier
+                                .testTag("SEARCH_PARAM_ITEM"),
+                            model = provideParameterSelectorItem(
+                                resources = resourceManager,
+                                focusManager = focusManager,
+                                fieldUiModel = fieldUiModel,
+                                callback = callback,
+                                onNextClicked = {
+                                    val nextIndex = index + 1
+                                    if (nextIndex < uiState.items.size) {
+                                        uiState.items[nextIndex].onItemClick()
                                     }
-                                }
-                            Column(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalArrangement = spacedBy(16.dp),
-                                horizontalAlignment = CenterHorizontally,
-                            ) {
-                                ParameterSelectorItem(
-                                    modifier = Modifier
-                                        .testTag("SEARCH_PARAM_ITEM"),
-                                    model = provideParameterSelectorItem(
-                                        resources = resourceManager,
-                                        focusManager = focusManager,
-                                        fieldUiModel = fieldUiModel,
-                                        callback = callback,
-                                        onNextClicked = {
-                                            val nextIndex = index + 1
-                                            if (nextIndex < uiState.items.size) {
-                                                uiState.items[nextIndex].onItemClick()
-                                            }
-                                        },
-                                    ),
-                                )
-                                Button(text = "Fill ${fieldUiModel.label}") {
-                                    launcher.launch(intent)
-                                }
-                            }
-                        } else {
-                            ParameterSelectorItem(
-                                modifier = Modifier
-                                    .testTag("SEARCH_PARAM_ITEM"),
-                                model = provideParameterSelectorItem(
-                                    resources = resourceManager,
-                                    focusManager = focusManager,
-                                    fieldUiModel = fieldUiModel,
-                                    callback = callback,
-                                    onNextClicked = {
-                                        val nextIndex = index + 1
-                                        if (nextIndex < uiState.items.size) {
-                                            uiState.items[nextIndex].onItemClick()
-                                        }
-                                    },
-                                ),
-                            )
-                        }
+                                },
+                            ),
+                        )
                     }
                 }
 
@@ -384,7 +334,6 @@ fun SearchFormPreview() {
         onSearch = {},
         onClear = {},
         onClose = {},
-        { null },
     )
 }
 
@@ -401,7 +350,6 @@ fun initSearchScreen(
         label: String,
     ) -> Unit,
     onClear: () -> Unit,
-    hasCustomIntent: (FieldUiModel) -> CustomIntentAction,
 ) {
     viewModel.fetchSearchParameters(
         programUid = program,
@@ -420,7 +368,6 @@ fun initSearchScreen(
                 viewModel.clearFocus()
             },
             onClose = { viewModel.clearFocus() },
-            hasCustomIntent = hasCustomIntent,
         )
     }
 }

@@ -378,9 +378,7 @@ public class SearchTEActivity extends ActivityGlobalAbstract implements SearchTE
                     closeKeyboard(binding.root);
                     presenter.onClearClick();
                     return Unit.INSTANCE;
-                },
-                presenter::hasCustomIntent
-        );
+                });
     }
 
     private void configureBottomNavigation() {

@@ -562,16 +562,6 @@ public class SearchTEPresenter implements SearchTEContractsModule.Presenter {
     }
 
     @Override
-    public CustomIntentAction hasCustomIntent(FieldUiModel fieldUiModel) {
-        return new CustomIntentAction(
-                "org.hisp.android.intentHandler",
-                emptyMap(),
-                ActionType.FILL_DE,
-                fieldUiModel.getUid()
-        );
-    }
-
-    @Override
     public void setOpeningFilterToNone() {
         filterRepository.collapseAllFilters();
     }

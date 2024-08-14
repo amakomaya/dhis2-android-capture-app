@@ -1,9 +1,14 @@
 package org.dhis2.usescases.searchTrackEntity
 
 import androidx.paging.PagingData
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
+import org.dhis2.commons.data.CustomIntents
 import org.dhis2.commons.filters.FilterManager
+import org.dhis2.commons.intents.ActionType
+import org.dhis2.commons.intents.CustomIntentAction
 import org.dhis2.commons.resources.MetadataIconProvider
 import org.dhis2.commons.viewmodel.DispatcherProvider
 import org.dhis2.data.search.SearchParametersModel
@@ -11,6 +16,7 @@ import org.dhis2.form.model.FieldUiModel
 import org.dhis2.form.model.OptionSetConfiguration
 import org.dhis2.form.ui.FieldViewModelFactory
 import org.dhis2.ui.toColor
+import org.dhis2.utils.TestingCredential
 import org.hisp.dhis.android.core.D2
 import org.hisp.dhis.android.core.arch.repositories.scope.RepositoryScope
 import org.hisp.dhis.android.core.common.ObjectStyle
@@ -115,6 +121,9 @@ class SearchRepositoryImplKt(
     }
 
     private fun programTrackedEntityAttributes(programUid: String): List<FieldUiModel> {
+
+        d2.dataStoreModule().dataStoreDownloader().byNamespace().eq("CUSTOM_INTENT_POC").blockingDownload()
+
         val searchableAttributes = d2.programModule().programTrackedEntityAttributes()
             .withRenderType()
             .byProgram().eq(programUid).orderBySortOrder(RepositoryScope.OrderByDirection.ASC)
@@ -169,6 +178,12 @@ class SearchRepositoryImplKt(
                 parameter.valueType !== ValueType.COORDINATE &&
                 parameter.valueType !== ValueType.FILE_RESOURCE
         }
+    }
+
+    private fun getCustomIntents(): CustomIntents {
+        val json = d2.dataStoreModule().dataStore().byKey().eq("CUSTOM_INTENT_POC").blockingGet().first().value().toString()
+        val type = object : TypeToken<CustomIntents>() {}.type
+        return Gson().fromJson(json, type)
     }
 
     private fun trackedEntitySearchFields(teiTypeUid: String): List<FieldUiModel> {
@@ -238,6 +253,16 @@ class SearchRepositoryImplKt(
             fieldMask = trackedEntityAttribute.fieldMask(),
             optionSetConfiguration = optionSetConfiguration,
             featureType = null,
+            customIntentAction = getCustomIntents().customIntents.firstOrNull {
+                it.targets.attributes.contains(trackedEntityAttribute.uid())
+            }?.let {
+                CustomIntentAction(
+                    it.packageName,
+                    it.arguments,
+                    ActionType.FILL_ATTR,
+                    trackedEntityAttribute.uid()
+                )
+            }
         )
     }
 }
