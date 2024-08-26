@@ -65,6 +65,7 @@ class MainPresenter(
     private val syncStatusController: SyncStatusController,
     private val versionRepository: VersionRepository,
     private val dispatcherProvider: DispatcherProvider,
+    private val forceToNotSynced: Boolean,
 ) : CoroutineScope {
 
     private var job = Job()
@@ -251,7 +252,7 @@ class MainPresenter(
     }
 
     fun wasSyncAlreadyDone(): Boolean {
-        if (view.hasToNotSync()) {
+        if (forceToNotSynced) {
             return true
         }
         return syncIsPerformedInteractor.execute()
