@@ -104,17 +104,16 @@ class LoginViewModel(
                                     )
                                 val user = preferenceProvider.getString(SECURE_USER_NAME, "")
                                 if (!serverUrl.isNullOrEmpty() && !user.isNullOrEmpty()) {
-                                    view.setUrl(serverUrl)
-                                    view.setUser(user)
+                                    setAccountInfo(serverUrl, user)
                                 } else {
-                                    view.setUrl(view.getDefaultServerProtocol())
+                                    setAccountInfo(view.getDefaultServerProtocol(), null)
                                 }
                             }
                         },
                         { exception -> Timber.e(exception) },
                     ),
             )
-        } ?: view.setUrl(view.getDefaultServerProtocol())
+        } ?: setAccountInfo(view.getDefaultServerProtocol(), null)
         displayManageAccount()
     }
 
@@ -137,13 +136,12 @@ class LoginViewModel(
                         { Timber.e(it) },
                     ),
             )
-        } ?: view.setUrl(view.getDefaultServerProtocol())
+        } ?: setAccountInfo(view.getDefaultServerProtocol(), null)
     }
 
     private fun setServerAndUserInfo(contextPath: String?) {
         contextPath?.let {
-            view.setUrl(contextPath)
-            view.setUser(userManager?.userName()?.blockingGet() ?: "")
+            setAccountInfo(it, userManager?.userName()?.blockingGet())
         } ?: {
             val isSessionLocked =
                 preferenceProvider.getBoolean(SESSION_LOCKED, false)
@@ -155,10 +153,9 @@ class LoginViewModel(
             val user = preferenceProvider.getString(SECURE_USER_NAME, "")
 
             if (!isSessionLocked && !serverUrl.isNullOrEmpty() && !user.isNullOrEmpty()) {
-                view.setUrl(serverUrl)
-                view.setUser(user)
+                setAccountInfo(serverUrl, user)
             } else {
-                view.setUrl(view.getDefaultServerProtocol())
+                setAccountInfo(view.getDefaultServerProtocol(), null)
             }
         }
     }
@@ -362,7 +359,7 @@ class LoginViewModel(
             preferenceProvider.saveUserCredentials(
                 serverUrl.value!!,
                 userName.value!!,
-                userPass
+                userPass,
             )
         }
     }
@@ -449,7 +446,6 @@ class LoginViewModel(
                 checkTestingEnvironment(this.serverUrl.value!!)
             }
         }
-        checkBiometricVisibility()
     }
 
     fun onUserChanged(userName: CharSequence, start: Int, before: Int, count: Int) {
@@ -473,6 +469,7 @@ class LoginViewModel(
         if (isDataComplete.value == null || isDataComplete.value != newValue) {
             isDataComplete.value = newValue
         }
+        checkBiometricVisibility()
     }
 
     private fun checkTestingEnvironment(serverUrl: String) {
@@ -495,6 +492,8 @@ class LoginViewModel(
     fun setAccountInfo(serverUrl: String?, userName: String?) {
         this.serverUrl.value = serverUrl
         this.userName.value = userName
+        view.setUrl(serverUrl)
+        view.setUser(userName)
     }
 
     fun onImportDataBase(file: File) {
@@ -515,8 +514,6 @@ class LoginViewModel(
                 result.fold(
                     onSuccess = {
                         setAccountInfo(it.serverUrl, it.username)
-                        view.setUrl(it.serverUrl)
-                        view.setUser(it.username)
                         displayManageAccount()
                     },
                     onFailure = {
@@ -536,6 +533,6 @@ class LoginViewModel(
 
     fun shouldAskForBiometrics(): Boolean =
         biometricController.hasBiometric() &&
-                !preferenceProvider.areCredentialsSet() &&
-                hasAccounts.value == false
+            !preferenceProvider.areCredentialsSet() &&
+            hasAccounts.value == false
 }
