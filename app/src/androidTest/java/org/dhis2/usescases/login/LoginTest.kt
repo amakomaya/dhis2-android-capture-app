@@ -65,14 +65,13 @@ class LoginTest : BaseTest() {
 
             // Test case - [ANDROAPP-4126](https://dhis2.atlassian.net/browse/ANDROAPP-4126)
             enableIntents()
-            clearServerField()
-            typeServer(MOCK_SERVER_URL)
             clickAccountRecovery()
             checkWebviewWithRecoveryAccountIsOpened()
             pressBack()
 
             // Test case - [ANDROAPP-4121](https://dhis2.atlassian.net/browse/ANDROAPP-4121)
             mockWebServerRobot.addResponse(GET, API_ME_PATH, API_ME_UNAUTHORIZE, HTTP_UNAUTHORIZE)
+            selectUsernameField()
             typeUsername(USERNAME)
             typePassword(PASSWORD)
             clickLoginButton()
