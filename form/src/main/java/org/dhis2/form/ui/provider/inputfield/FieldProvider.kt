@@ -466,7 +466,7 @@ fun ProvideByValueType(
                 intentHandler = intentHandler,
                 resources = resources,
                 onNextClicked = onNextClicked,
-            )
+                )
         }
 
         ValueType.MULTI_TEXT -> {

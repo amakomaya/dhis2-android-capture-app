@@ -76,4 +76,5 @@ dependencies {
     debugImplementation(libs.test.ui.test.manifest)
 
     coreLibraryDesugaring(libs.desugar)
+    implementation("io.github.shivathapaa:nepali-date-picker:2.6.1")
 }
